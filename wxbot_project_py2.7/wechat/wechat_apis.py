@@ -203,6 +203,8 @@ class WXAPI(object):
             if data == '':
                 return
             qrcode_path = save_file('qrcode.jpg', data, './')
+	    qrcode_path = os.path.abspath(qrcode_path)
+	    print(qrcode_path)
             os.startfile(qrcode_path)
         else:
             str2qr_terminal(self.wx_conf['API_qrcode'] + self.uuid)

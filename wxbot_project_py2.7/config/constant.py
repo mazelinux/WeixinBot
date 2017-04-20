@@ -7,7 +7,9 @@ class Constant(object):
     @brief      All used constants are listed here
     """
 
-    WECHAT_CONFIG_FILE = 'config/wechat.conf'
+#WECHAT_CONFIG_FILE = 'config/wechat.conf'
+#D:\Nyeti\WeixinBot\wxbot_project_py2.7\config
+    WECHAT_CONFIG_FILE = './config/wechat.conf.bak'
     LOGGING_LOGGER_NAME = 'WeChat'
 
     QRCODE_BLACK = '\033[40m  \033[0m'

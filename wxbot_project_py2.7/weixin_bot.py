@@ -2,6 +2,7 @@
 # coding: utf-8
 
 #===================================================
+#from wechat import *
 from wechat import WeChat
 from wechat.utils import *
 from wx_handler import WeChatMsgProcessor

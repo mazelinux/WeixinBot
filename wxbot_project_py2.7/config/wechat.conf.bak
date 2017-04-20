@@ -1,13 +1,14 @@
 [wechat]
 host = wx.qq.com
-uuid = 
+uuid = oa9MMN83mw==
 redirect_uri = 
-uin = 
+uin = 0
 sid = 
 skey = 
 pass_ticket = 
-device_id = 
-last_login = 
+device_id = e654278747631844
+last_login = 1492676758.68
+synckey = 
 
 [setting]
 prefix = tmp_data/

@@ -108,7 +108,7 @@ class WebWeixin(object):
         self.autoReplyMode = False
         self.syncHost = ''
         self.user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36'
-        self.interactive = False
+        self.interactive = True
         self.autoOpen = False
         self.saveFolder = os.path.join(os.getcwd(), 'saved')
         self.saveSubFolders = {'webwxgeticon': 'icons', 'webwxgetheadimg': 'headimgs', 'webwxgetmsgimg': 'msgimgs',
@@ -799,6 +799,25 @@ class WebWeixin(object):
 #自己加的代码-------------------------------------------#
                 if self.autoReplyMode:
                     ans = self._xiaodoubi(content) + '\n[微信机器人自动回复]'
+                    time.sleep(5)
+                    if self.webwxsendmsg(ans, msg['FromUserName']):
+                        print('自动回复: ' + ans)
+                        logging.info('自动回复: ' + ans)
+                    else:
+                        print('自动回复失败')
+                        logging.info('自动回复失败')
+
+                    time.sleep(15)
+                    ans = self._xiaodoubi(content) + '\n[微信机器人自动回复]123'
+                    if self.webwxsendmsg(ans, msg['FromUserName']):
+                        print('自动回复: ' + ans)
+                        logging.info('自动回复: ' + ans)
+                    else:
+                        print('自动回复失败')
+                        logging.info('自动回复失败')
+
+                    time.sleep(15)
+                    ans = self._xiaodoubi(content) + '\n[微信机器人自动回复]12345'
                     if self.webwxsendmsg(ans, msg['FromUserName']):
                         print('自动回复: ' + ans)
                         logging.info('自动回复: ' + ans)
@@ -1152,23 +1171,23 @@ class WebWeixin(object):
         return ''
 
     def _xiaodoubi(self, word):
-        url = 'http://www.xiaodoubi.com/bot/chat.php'
-        try:
-            r = requests.post(url, data={'chat': word})
-            return r.content
-        except:
+        #url = 'http://www.xiaodoubi.com/bot/chat.php'
+        #try:
+        #    r = requests.post(url, data={'chat': word})
+        #    return r.content
+        #except:
             return "让我一个人静静 T_T..."
 
-    def _simsimi(self, word):
-        key = ''
-        url = 'http://sandbox.api.simsimi.com/request.p?key=%s&lc=ch&ft=0.0&text=%s' % (
-            key, word)
-        r = requests.get(url)
-        ans = r.json()
-        if ans['result'] == '100':
-            return ans['response']
-        else:
-            return '你在说什么，风太大听不清列'
+#    def _simsimi(self, word):
+#        key = ''
+#        url = 'http://sandbox.api.simsimi.com/request.p?key=%s&lc=ch&ft=0.0&text=%s' % (
+#            key, word)
+#        r = requests.get(url)
+#        ans = r.json()
+#        if ans['result'] == '100':
+#            return ans['response']
+#        else:
+#            return '你在说什么，风太大听不清列'
 
     def _searchContent(self, key, content, fmat='attr'):
         if fmat == 'attr':
