@@ -105,6 +105,7 @@ class WebWeixin(object):
         self.GroupMemeberList = []  # 群友
         self.PublicUsersList = []  # 公众号／服务号
         self.SpecialUsersList = []  # 特殊账号
+        self.list_name = [] #同一人说话不超过三句
         self.autoReplyMode = False
         self.syncHost = ''
         self.user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36'
@@ -789,6 +790,10 @@ class WebWeixin(object):
             name = self.getUserRemarkName(msg['FromUserName'])
             content = msg['Content'].replace('&lt;', '<').replace('&gt;', '>')
             msgid = msg['MsgId']
+            self.list_name.append(msg['FromUserName'])
+            print (self.list_name)
+            if self.list_name.count(msg['FromUserName']) >= 3:
+                pass
 
             if msgType == 1:
                 raw_msg = {'raw_msg': msg}
@@ -798,32 +803,19 @@ class WebWeixin(object):
                 #    store
 #自己加的代码-------------------------------------------#
                 if self.autoReplyMode:
-                    ans = self._xiaodoubi(content) + '\n[微信机器人自动回复]'
+                    ans = self._tulin(content)
+                    #ans = self._simsimi(content) + '\n[微信机器人自动回复]'
+                    #ans = self._xiaodoubi(content) + '\n[微信机器人自动回复]'
                     time.sleep(5)
-                    if self.webwxsendmsg(ans, msg['FromUserName']):
-                        print('自动回复: ' + ans)
-                        logging.info('自动回复: ' + ans)
+                    if ans != '':
+                        if self.webwxsendmsg(ans, msg['FromUserName']):
+                            print('自动回复: ' + ans)
+                            logging.info('自动回复: ' + ans)
+                        else:
+                            print('自动回复失败')
+                            logging.info('自动回复失败')
                     else:
-                        print('自动回复失败')
-                        logging.info('自动回复失败')
-
-                    time.sleep(15)
-                    ans = self._xiaodoubi(content) + '\n[微信机器人自动回复]123'
-                    if self.webwxsendmsg(ans, msg['FromUserName']):
-                        print('自动回复: ' + ans)
-                        logging.info('自动回复: ' + ans)
-                    else:
-                        print('自动回复失败')
-                        logging.info('自动回复失败')
-
-                    time.sleep(15)
-                    ans = self._xiaodoubi(content) + '\n[微信机器人自动回复]12345'
-                    if self.webwxsendmsg(ans, msg['FromUserName']):
-                        print('自动回复: ' + ans)
-                        logging.info('自动回复: ' + ans)
-                    else:
-                        print('自动回复失败')
-                        logging.info('自动回复失败')
+                        pass
             elif msgType == 3:
                 image = self.webwxgetmsgimg(msgid)
                 raw_msg = {'raw_msg': msg,
@@ -1172,22 +1164,68 @@ class WebWeixin(object):
 
     def _xiaodoubi(self, word):
         #url = 'http://www.xiaodoubi.com/bot/chat.php'
-        #try:
+        #onstant.BOT_TULING_BOT_REPLY
         #    r = requests.post(url, data={'chat': word})
         #    return r.content
         #except:
-            return "让我一个人静静 T_T..."
+        print (word)
+        return word
 
-#    def _simsimi(self, word):
-#        key = ''
-#        url = 'http://sandbox.api.simsimi.com/request.p?key=%s&lc=ch&ft=0.0&text=%s' % (
-#            key, word)
-#        r = requests.get(url)
-#        ans = r.json()
-#        if ans['result'] == '100':
-#            return ans['response']
-#        else:
-#            return '你在说什么，风太大听不清列'
+    def _simsimi(self, word):
+        key = ''
+        url = 'http://sandbox.api.simsimi.com/request.p?key=%s&lc=ch&ft=0.0&text=%s' % (
+            key, word)
+        r = requests.get(url)
+        ans = r.json()
+        if ans['result'] == '100':
+            return ans['response']
+        else:
+            return '你在说什么，风太大听不清列'
+
+    def _tulin(self, text):
+        EMOTICON = [
+        '[Smile]', '[Grimace]', '[Drool]', '[Scowl]', '[CoolGuy]', '[Sob]', '[Shy]',
+        '[Silent]', '[Sleep]', '[Cry]', '[Awkward]', '[Angry]', '[Tongue]', '[Grin]',
+        '[Surprise]', '[Frown]', '[Ruthless]', '[Blush]', '[Scream]', '[Puke]',
+        '[Chuckle]', '[Joyful]', '[Slight]', '[Smug]', '[Hungry]', '[Drowsy]', '[Panic]',
+        '[Sweat]', '[Laugh]', '[Commando]', '[Determined]', '[Scold]', '[Shocked]', '[Shhh]',
+        '[Dizzy]', '[Tormented]', '[Toasted]', '[Skull]', '[Hammer]', '[Wave]',
+        '[Relief]', '[DigNose]', '[Clap]', '[Shame]', '[Trick]',' [Bah！L]','[Bah！R]',
+        '[Yawn]', '[Lookdown]', '[Wronged]', '[Puling]', '[Sly]', '[Kiss]', '[Uh-oh]',
+        '[Whimper]', '[Cleaver]', '[Melon]', '[Beer]', '[Basketball]', '[PingPong]',
+        '[Coffee]', '[Rice]', '[Pig]', '[Rose]', '[Wilt]', '[Lip]', '[Heart]',
+        '[BrokenHeart]', '[Cake]', '[Lightning]', '[Bomb]', '[Dagger]', '[Soccer]', '[Ladybug]',
+        '[Poop]', '[Moon]', '[Sun]', '[Gift]', '[Hug]', '[Strong]',
+        '[Weak]', '[Shake]', '[Victory]', '[Admire]', '[Beckon]', '[Fist]', '[Pinky]',
+        '[Love]', '[No]', '[OK]', '[InLove]', '[Blowkiss]', '[Waddle]', '[Tremble]',
+        '[Aaagh!]', '[Twirl]', '[Kotow]', '[Lookback]', '[Jump]', '[Give-in]',
+        u'\U0001f604', u'\U0001f637', u'\U0001f639', u'\U0001f61d', u'\U0001f632', u'\U0001f633',
+        u'\U0001f631', u'\U0001f64d', u'\U0001f609', u'\U0001f60c', u'\U0001f612', u'\U0001f47f',
+        u'\U0001f47b', u'\U0001f49d', u'\U0001f64f', u'\U0001f4aa', u'\U0001f4b5', u'\U0001f382',
+        u'\U0001f388', u'\U0001f4e6',
+        ]
+        BOT_TULING_API_KEY = '55e7f30895a0a10535984bae5ad294d1'
+        BOT_TULING_API_URL = 'http://www.tuling123.com/openapi/api?key=%s&info=%s&userid=%s'
+        BOT_TULING_BOT_REPLY = u'麻烦说的清楚一点，我听不懂你在说什么'
+        APIKEY = BOT_TULING_API_KEY
+        api_url = BOT_TULING_API_URL % (APIKEY, text, '12345678')
+        #print (api_url)
+        #r = json.loads(get(api_url))
+        r = requests.get(api_url)
+        r = r.json()
+        if r.get('code') == 100000 and r.get('text') != BOT_TULING_BOT_REPLY:
+            p = random.randint(1, 10)
+            if p > 3:
+                return r['text']
+            elif p > 1:
+                # send emoji
+                if random.randint(1, 10) > 5:
+                    n = random.randint(0, len(EMOTICON)-1)
+                    m = random.randint(1, 3)
+                    reply = EMOTICON[n].encode('utf-8') * m
+                    return reply
+        return ''
+        
 
     def _searchContent(self, key, content, fmat='attr'):
         if fmat == 'attr':
