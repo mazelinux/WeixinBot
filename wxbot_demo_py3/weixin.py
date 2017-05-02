@@ -790,10 +790,11 @@ class WebWeixin(object):
             name = self.getUserRemarkName(msg['FromUserName'])
             content = msg['Content'].replace('&lt;', '<').replace('&gt;', '>')
             msgid = msg['MsgId']
-            self.list_name.append(msg['FromUserName'])
+#每个人至多回复三句话
+            self.list_name.append(name)
             print (self.list_name)
-            if self.list_name.count(msg['FromUserName']) >= 3:
-                pass
+            if self.list_name.count(name) >= 3:
+                break
 
             if msgType == 1:
                 raw_msg = {'raw_msg': msg}
@@ -809,8 +810,8 @@ class WebWeixin(object):
                     time.sleep(5)
                     if ans != '':
                         if self.webwxsendmsg(ans, msg['FromUserName']):
-                            print('自动回复: ' + ans)
-                            logging.info('自动回复: ' + ans)
+                            print('自动回复: ' , ans)
+                            logging.info('自动回复: ' , ans)
                         else:
                             print('自动回复失败')
                             logging.info('自动回复失败')
@@ -828,6 +829,7 @@ class WebWeixin(object):
                            'message': '%s 发了一段语音: %s' % (name, voice)}
                 self._showMsg(raw_msg)
                 self._safe_open(voice)
+                self.webwxsendmsg("我现在不方便听语音", msg['FromUserName']):
             elif msgType == 42:
                 info = msg['RecommendInfo']
                 print('%s 发送了一张名片:' % name)
@@ -893,6 +895,9 @@ class WebWeixin(object):
         while True:
             self.lastCheckTs = time.time()
             [retcode, selector] = self.synccheck()
+            print ('maze' , self.synccheck)
+            print ('maze' , retcode)
+            print ('maze' , selector)
             if self.DEBUG:
                 print('retcode: %s, selector: %s' % (retcode, selector))
             logging.debug('retcode: %s, selector: %s' % (retcode, selector))

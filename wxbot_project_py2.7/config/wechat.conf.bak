@@ -1,14 +1,14 @@
 [wechat]
 host = wx.qq.com
-uuid = oa9MMN83mw==
-redirect_uri = 
-uin = 0
-sid = 
-skey = 
-pass_ticket = 
+uuid = oapPDnJdxw==
+redirect_uri = https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?ticket=ATulQQeCil-MWPTJRm5u6Nm0@qrticket_0&uuid=IeBciVJGKA==&lang=zh_CN&scan=1493261718&fun=new
+uin = 958021414
+sid = l5x1dpMfwIoEIQ42
+skey = @crypt_61bd19cf_2b33b10fbd4e331e088189f588835130
+pass_ticket = bXeq47%2FO%2FeI6Zu2%2FkZVwR%2FdX4ou7uupJBUOM3fVwAT%2FQSwJWMzbYE0Ihrq7ZGMro
 device_id = e654278747631844
-last_login = 1492676758.68
-synckey = 
+last_login = 1493261974.02
+synckey = 1_658451454|2_658451727|3_658451296|1000_1493253001
 
 [setting]
 prefix = tmp_data/

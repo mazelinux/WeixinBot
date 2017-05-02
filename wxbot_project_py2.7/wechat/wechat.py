@@ -149,13 +149,13 @@ class WeChat(WXAPI):
             if self.msg_handler:
                 self.msg_handler.check_schedule_task()
 
-            # if self.bot:
-            #     r = self.bot.time_schedule()
-            #     if r:
-            #         for g in self.GroupList:
-            #             echo('[*] 推送 -> %s: %s' % (g['NickName'], r))
-            #             g_id = g['UserName']
-            #             self.webwxsendmsg(r, g_id)
+            if self.bot:
+                r = self.bot.time_schedule()
+                if r:
+                    for g in self.GroupList:
+                        echo('[*] 推送 -> %s: %s' % (g['NickName'], r))
+                        g_id = g['UserName']
+                        self.webwxsendmsg(r, g_id)
 
     def get_run_time(self):
         """

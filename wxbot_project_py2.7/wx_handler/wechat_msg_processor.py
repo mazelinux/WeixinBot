@@ -218,12 +218,12 @@ class WeChatMsgProcessor(object):
         else:
             # reply bot
             # ---------
-            # if wechat.bot:
-            #     r = wechat.bot.reply(cmd)
-            #     if r:
-            #         wechat.webwxsendmsg(r, g_id)
-            #     else:
-            #         pass
+            if wechat.bot:
+                r = wechat.bot.reply(cmd)
+                if r:
+                    wechat.webwxsendmsg(r, g_id)
+                else:
+                    pass
             img_name = [
                 '0.jpg', '1.jpeg', '2.gif', '3.jpg', '4.jpeg',
                 '5.gif', '6.gif', '7.gif', '8.jpg', '9.jpg'
