@@ -791,6 +791,7 @@ class WebWeixin(object):
             content = msg['Content'].replace('&lt;', '<').replace('&gt;', '>')
             msgid = msg['MsgId']
 #每个人至多回复三句话
+            if name != ""
             self.list_name.append(name)
             print (self.list_name)
             if self.list_name.count(name) >= 3:
@@ -802,7 +803,6 @@ class WebWeixin(object):
 #自己加的代码-------------------------------------------#
                 #if self.autoReplyRevokeMode:
                 #    store
-#自己加的代码-------------------------------------------#
                 if self.autoReplyMode:
                     ans = self._tulin(content)
                     #ans = self._simsimi(content) + '\n[微信机器人自动回复]'
@@ -817,6 +817,7 @@ class WebWeixin(object):
                             logging.info('自动回复失败')
                     else:
                         pass
+#自己加的代码-------------------------------------------#
             elif msgType == 3:
                 image = self.webwxgetmsgimg(msgid)
                 raw_msg = {'raw_msg': msg,
@@ -829,7 +830,7 @@ class WebWeixin(object):
                            'message': '%s 发了一段语音: %s' % (name, voice)}
                 self._showMsg(raw_msg)
                 self._safe_open(voice)
-                self.webwxsendmsg("我现在不方便听语音", msg['FromUserName']):
+                self.webwxsendmsg("我现在不方便听语音", msg['FromUserName'])
             elif msgType == 42:
                 info = msg['RecommendInfo']
                 print('%s 发送了一张名片:' % name)
@@ -914,16 +915,16 @@ class WebWeixin(object):
                     r = self.webwxsync()
                     if r is not None:
                         self.handleMsg(r)
-                elif selector == '6':
-                    # TODO
-                    redEnvelope += 1
-                    print('[*] 收到疑似红包消息 %d 次' % redEnvelope)
-                    logging.debug('[*] 收到疑似红包消息 %d 次' % redEnvelope)
-                elif selector == '7':
-                    playWeChat += 1
-                    print('[*] 你在手机上玩微信被我发现了 %d 次' % playWeChat)
-                    logging.debug('[*] 你在手机上玩微信被我发现了 %d 次' % playWeChat)
-                    r = self.webwxsync()
+#                elif selector == '6':
+#                    # TODO
+#                    redEnvelope += 1
+#                    print('[*] 收到疑似红包消息 %d 次' % redEnvelope)
+#                    logging.debug('[*] 收到疑似红包消息 %d 次' % redEnvelope)
+#                elif selector == '7':
+#                    playWeChat += 1
+#                    print('[*] 你在手机上玩微信被我发现了 %d 次' % playWeChat)
+#                    logging.debug('[*] 你在手机上玩微信被我发现了 %d 次' % playWeChat)
+#                    r = self.webwxsync()
                 elif selector == '0':
                     time.sleep(1)
             if (time.time() - self.lastCheckTs) <= 20:
@@ -1023,6 +1024,9 @@ class WebWeixin(object):
         else:
             print('[*] 自动回复模式 ... 关闭')
             logging.debug('[*] 自动回复模式 ... 关闭')
+
+        if input('[*] 是否全员说话(y/n): ') == 'y':
+            self.sendMsgToAll("你好啊")
 
         if sys.platform.startswith('win'):
             import _thread
@@ -1166,7 +1170,7 @@ class WebWeixin(object):
             logging.error('generic exception: ' + traceback.format_exc())
 
         return ''
-
+"""
     def _xiaodoubi(self, word):
         #url = 'http://www.xiaodoubi.com/bot/chat.php'
         #onstant.BOT_TULING_BOT_REPLY
@@ -1186,7 +1190,7 @@ class WebWeixin(object):
             return ans['response']
         else:
             return '你在说什么，风太大听不清列'
-
+"""
     def _tulin(self, text):
         EMOTICON = [
         '[Smile]', '[Grimace]', '[Drool]', '[Scowl]', '[CoolGuy]', '[Sob]', '[Shy]',
