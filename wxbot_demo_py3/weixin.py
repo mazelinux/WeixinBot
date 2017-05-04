@@ -707,6 +707,7 @@ class WebWeixin(object):
         dstName = None
         groupName = None
         content = None
+        hot_package = None
 
         msg = message
         logging.debug(msg)
@@ -760,6 +761,8 @@ class WebWeixin(object):
             # 收到了红包
             if content == '收到红包，请在手机上查看':
                 msg['message'] = content
+                hot_package = 123
+                print('maze',hot_package)
 
             # 指定了消息内容
             if 'message' in list(msg.keys()):
@@ -773,6 +776,7 @@ class WebWeixin(object):
             print('%s %s -> %s: %s' % (message_id, srcName.strip(), dstName.strip(), content.replace('<br/>', '\n')))
             logging.info('%s %s -> %s: %s' % (message_id, srcName.strip(),
                                               dstName.strip(), content.replace('<br/>', '\n')))
+        return hot_package
 
     def handleMsg(self, r):
         for msg in r['AddMsgList']:
@@ -790,8 +794,9 @@ class WebWeixin(object):
             name = self.getUserRemarkName(msg['FromUserName'])
             content = msg['Content'].replace('&lt;', '<').replace('&gt;', '>')
             msgid = msg['MsgId']
+#自己加的代码-------------------------------------------#
 #每个人至多回复三句话
-            if name != ""
+#if name != ""
             self.list_name.append(name)
             print (self.list_name)
             if self.list_name.count(name) >= 3:
@@ -800,14 +805,12 @@ class WebWeixin(object):
             if msgType == 1:
                 raw_msg = {'raw_msg': msg}
                 self._showMsg(raw_msg)
-#自己加的代码-------------------------------------------#
                 #if self.autoReplyRevokeMode:
                 #    store
                 if self.autoReplyMode:
                     ans = self._tulin(content)
                     #ans = self._simsimi(content) + '\n[微信机器人自动回复]'
                     #ans = self._xiaodoubi(content) + '\n[微信机器人自动回复]'
-                    time.sleep(5)
                     if ans != '':
                         if self.webwxsendmsg(ans, msg['FromUserName']):
                             print('自动回复: ' , ans)
@@ -881,6 +884,11 @@ class WebWeixin(object):
                 raw_msg = {'raw_msg': msg, 'message': '%s 撤回了一条消息' % name}
                 self._showMsg(raw_msg)
             else:
+                raw_msg = {'raw_msg': msg}
+                xyz = self._showMsg(raw_msg)
+                print('maze in hot',xyz)
+                if xyz == 123:
+                    self.webwxsendmsg("谢谢你的红包哦。么么哒。永远爱你", msg['FromUserName'])
                 logging.debug('[*] 该消息类型为: %d，可能是表情，图片, 链接或红包: %s' %
                               (msg['MsgType'], json.dumps(msg)))
                 raw_msg = {
@@ -1170,27 +1178,27 @@ class WebWeixin(object):
             logging.error('generic exception: ' + traceback.format_exc())
 
         return ''
-"""
-    def _xiaodoubi(self, word):
-        #url = 'http://www.xiaodoubi.com/bot/chat.php'
-        #onstant.BOT_TULING_BOT_REPLY
-        #    r = requests.post(url, data={'chat': word})
-        #    return r.content
-        #except:
-        print (word)
-        return word
 
-    def _simsimi(self, word):
-        key = ''
-        url = 'http://sandbox.api.simsimi.com/request.p?key=%s&lc=ch&ft=0.0&text=%s' % (
-            key, word)
-        r = requests.get(url)
-        ans = r.json()
-        if ans['result'] == '100':
-            return ans['response']
-        else:
-            return '你在说什么，风太大听不清列'
-"""
+#    def _xiaodoubi(self, word):
+#        #url = 'http://www.xiaodoubi.com/bot/chat.php'
+#        #onstant.BOT_TULING_BOT_REPLY
+#        #    r = requests.post(url, data={'chat': word})
+#        #    return r.content
+#        #except:
+#        print (word)
+#        return word
+#
+#    def _simsimi(self, word):
+#        key = ''
+#        url = 'http://sandbox.api.simsimi.com/request.p?key=%s&lc=ch&ft=0.0&text=%s' % (
+#            key, word)
+#        r = requests.get(url)
+#        ans = r.json()
+#        if ans['result'] == '100':
+#            return ans['response']
+#        else:
+#            return '你在说什么，风太大听不清列'
+#
     def _tulin(self, text):
         EMOTICON = [
         '[Smile]', '[Grimace]', '[Drool]', '[Scowl]', '[CoolGuy]', '[Sob]', '[Shy]',
@@ -1231,8 +1239,10 @@ class WebWeixin(object):
                 if random.randint(1, 10) > 5:
                     n = random.randint(0, len(EMOTICON)-1)
                     m = random.randint(1, 3)
-                    reply = EMOTICON[n].encode('utf-8') * m
-                    return reply
+                    reply = EMOTICON[n]* m
+                    print('maze',EMOTICON[n])
+                    print('maze',EMOTICON[n].encode('utf-8'))
+                return reply
         return ''
         
 
