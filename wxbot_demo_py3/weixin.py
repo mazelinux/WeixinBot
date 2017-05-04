@@ -799,7 +799,7 @@ class WebWeixin(object):
 #if name != ""
             self.list_name.append(name)
             print (self.list_name)
-            if self.list_name.count(name) >= 3:
+            if self.list_name.count(name) >= 8:
                 break
 
             if msgType == 1:
@@ -1242,7 +1242,7 @@ class WebWeixin(object):
                     reply = EMOTICON[n]* m
                     print('maze',EMOTICON[n])
                     print('maze',EMOTICON[n].encode('utf-8'))
-                return reply
+                    return reply
         return ''
         
 
