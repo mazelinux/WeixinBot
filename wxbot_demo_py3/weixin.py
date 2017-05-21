@@ -436,6 +436,7 @@ class WebWeixin(object):
 
         if dic['BaseResponse']['Ret'] == 0:
             self.SyncKey = dic['SyncKey']
+            #self.SyncKey = dic['SyncCheckKey']
             self.synckey = '|'.join(
                 [str(keyVal['Key']) + '_' + str(keyVal['Val']) for keyVal in self.SyncKey['List']])
         return dic
@@ -650,6 +651,7 @@ class WebWeixin(object):
         if name == '未知群':
             # 现有群里面查不到
             GroupList = self.getNameById(id)
+#print('maze',GroupList)
             for group in GroupList:
                 self.GroupList.append(group)
                 if group['UserName'] == id:
@@ -795,31 +797,65 @@ class WebWeixin(object):
             content = msg['Content'].replace('&lt;', '<').replace('&gt;', '>')
             msgid = msg['MsgId']
 #自己加的代码-------------------------------------------#
+#print("maze sync ok")
 #每个人至多回复三句话
 #if name != ""
-            self.list_name.append(name)
-            print (self.list_name)
-            if self.list_name.count(name) >= 8:
-                break
+#self.list_name.append(name)
+#print (self.list_name)
+        #    if self.list_name.count(name) >= 8:
+         #       break
 
             if msgType == 1:
+                ret = 0
+                if name == "陌生人":
+                    self.add_friend(msg['FromUserName'],2)
+                    self.add_friend(msg['FromUserName'],3)
+                    self.webwxgetcontact()
+                    self.webwxsync()
+                    self.webwxsendmsg("请问您需要什么资源呢？初次见面，还请您多多包涵。", msg['FromUserName'])
+                if "淘盟" in name:
+                    break
                 raw_msg = {'raw_msg': msg}
                 self._showMsg(raw_msg)
                 #if self.autoReplyRevokeMode:
                 #    store
                 if self.autoReplyMode:
-                    ans = self._tulin(content)
                     #ans = self._simsimi(content) + '\n[微信机器人自动回复]'
                     #ans = self._xiaodoubi(content) + '\n[微信机器人自动回复]'
-                    if ans != '':
-                        if self.webwxsendmsg(ans, msg['FromUserName']):
-                            print('自动回复: ' , ans)
-                            logging.info('自动回复: ' , ans)
-                        else:
-                            print('自动回复失败')
-                            logging.info('自动回复失败')
+#########################################
+#############add other movie resource
+#########################################
+                    if "摔跤" in content:
+                        self.webwxsendmsg("http://pan.baidu.com/s/1midq9WO 密码：j2x6", msg['FromUserName'])
+                        ret = 1
+                    elif "银河" in content:
+                        self.webwxsendmsg("http://pan.baidu.com/s/1gfginoJ 密码: vyy1，", msg['FromUserName'])
+                    elif "春娇救志明" in content:
+                        self.webwxsendmsg("https://pan.baidu.com/s/1o8foioU 密码: rypp", msg['FromUserName'])
+                    elif "喜欢你" in content:
+                        self.webwxsendmsg("http://pan.baidu.com/s/1jHLJuC2 密码：cfjh", msg['FromUserName'])
+                    elif "拆弹专家" in content:
+                        self.webwxsendmsg("http://pan.baidu.com/s/1skGLvy9 密码：ew74", msg['FromUserName'])
+#########################################
+#############add other movie resource
+#########################################
+                    elif "谢谢" in content:
+                        self.webwxsendmsg("不客气。", msg['FromUserName'])
                     else:
-                        pass
+                        ans = self._tulin(content)
+                        if ans != '':
+                            if self.webwxsendmsg(ans, msg['FromUserName']):
+                                print('自动回复: ' , ans)
+                                logging.info('自动回复: ' , ans)
+                            else:
+                                print('自动回复失败')
+                                logging.info('自动回复失败')
+                        else:
+                            pass
+                    if ret == 1:
+                        self.webwxsendmsg("如果资源您还满意，顺便发个小小的红包鼓励一下吧！", msg['FromUserName'])
+                        time.sleep(1)
+                        self.webwxsendmsg("请留我在您的通讯录里面，以便于与下一场热门电影不期而遇~有时间看看朋友圈。朋友圈代表最新收录", msg['FromUserName'])
 #自己加的代码-------------------------------------------#
             elif msgType == 3:
                 image = self.webwxgetmsgimg(msgid)
@@ -886,7 +922,7 @@ class WebWeixin(object):
             else:
                 raw_msg = {'raw_msg': msg}
                 xyz = self._showMsg(raw_msg)
-                print('maze in hot',xyz)
+                #print('maze in hot',xyz)
                 if xyz == 123:
                     self.webwxsendmsg("谢谢你的红包哦。么么哒。永远爱你", msg['FromUserName'])
                 logging.debug('[*] 该消息类型为: %d，可能是表情，图片, 链接或红包: %s' %
@@ -904,9 +940,9 @@ class WebWeixin(object):
         while True:
             self.lastCheckTs = time.time()
             [retcode, selector] = self.synccheck()
-            print ('maze' , self.synccheck)
-            print ('maze' , retcode)
-            print ('maze' , selector)
+            #print ('maze' , self.synccheck)
+            #print ('maze' , retcode)
+            #print ('maze' , selector)
             if self.DEBUG:
                 print('retcode: %s, selector: %s' % (retcode, selector))
             logging.debug('retcode: %s, selector: %s' % (retcode, selector))
@@ -923,12 +959,16 @@ class WebWeixin(object):
                     r = self.webwxsync()
                     if r is not None:
                         self.handleMsg(r)
-#                elif selector == '6':
-#                    # TODO
+                elif selector == '3':
+                    r = self.webwxsync()
+                elif selector == '6':
+                    # TODO
+                    r = self.webwxsync()
 #                    redEnvelope += 1
 #                    print('[*] 收到疑似红包消息 %d 次' % redEnvelope)
 #                    logging.debug('[*] 收到疑似红包消息 %d 次' % redEnvelope)
-#                elif selector == '7':
+                elif selector == '7': 
+                    r = self.webwxsync()
 #                    playWeChat += 1
 #                    print('[*] 你在手机上玩微信被我发现了 %d 次' % playWeChat)
 #                    logging.debug('[*] 你在手机上玩微信被我发现了 %d 次' % playWeChat)
@@ -1034,7 +1074,8 @@ class WebWeixin(object):
             logging.debug('[*] 自动回复模式 ... 关闭')
 
         if input('[*] 是否全员说话(y/n): ') == 'y':
-            self.sendMsgToAll("你好啊")
+#self.sendMsgToAll("由于有人恶意举报我分享的链接。现在摔跤吧爸爸链接已经失效。需要晚上才能有新的。抱歉。如果这种恶意举报次数多了。我将不再免费给大家分享了")
+            self.sendMsgToAll("新的链接已经给出，大家可以正常使用了")
 
         if sys.platform.startswith('win'):
             import _thread
@@ -1245,6 +1286,58 @@ class WebWeixin(object):
                     return reply
         return ''
         
+    def add_friend(self, userName, status=2, verifyContent='', autoUpdate=1):
+    #''' Add a friend or accept a friend
+     #   * for adding status should be 2
+     #   * for accepting status should be 3
+    #'''
+        url = '%s/webwxverifyuser?r=%s&pass_ticket=%s' % (
+            self.base_uri, int(time.time()), self.pass_ticket)
+        print(url)
+        data = {
+        'BaseRequest': self.BaseRequest,
+        'Opcode': status, # 3
+        'VerifyUserListSize': 1,
+        'VerifyUserList': [{
+            'Value': userName,
+            'VerifyUserTicket': '', }],
+        'VerifyContent': verifyContent,
+        'SceneListCount': 1,
+        'SceneList': [33],
+        'skey': self.skey, }
+        headers = {
+        'content-type': 'application/json; charset=UTF-8',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:42.0) Gecko/20100101 Firefox/42.0'}
+        r = requests.post(url, headers=headers,
+            data=json.dumps(data, ensure_ascii=False).encode('utf8', 'replace'))
+        print('maze_function add_friend')
+        if autoUpdate:
+            self.update_friend(userName)
+        #return ReturnValue(rawResponse=r)
+
+    def update_friend(self, userName):
+        if not isinstance(userName, list):
+            userName = [userName]
+        url = '%s/webwxbatchgetcontact?type=ex&r=%s' % (
+            self.base_uri, int(time.time()))
+        headers = {
+        'content-type': 'application/json; charset=UTF-8',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:42.0) Gecko/20100101 Firefox/42.0'}
+        data = {
+        'BaseRequest': self.BaseRequest,
+        'Count': len(userName),
+        'List': [{
+            'UserName': u,
+            'EncryChatRoomId': '', } for u in userName], }
+        friendList = json.loads(requests.post(url, data=json.dumps(data), headers=headers
+            ).content.decode('utf8', 'replace')).get('ContactList')
+
+        print('maze_funciton update_friend')
+#update_local_friends(self, friendList)
+#       r = [self.storageClass.search_friends(userName=f['UserName'])
+#           for f in friendList]
+#       return r if len(r) != 1 else r[0]
+
 
     def _searchContent(self, key, content, fmat='attr'):
         if fmat == 'attr':
