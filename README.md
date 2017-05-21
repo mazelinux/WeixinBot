@@ -784,6 +784,15 @@ Content:
 ```
 
 
+
+这个分支的维护者是maze,如果你对这个分支感兴趣或者想讨论如何earn money，可以加机器人
+
+<div align=center>
+<img src="imgs/auto.jpg" width="220" height="550" alt="join us"/>
+</div>
+
+- association_login
+	目前网页版微信已经可以脱离扫码，但是依然需要在客户端进行确认登录。
 ## <a name="Discussion-Group">Discussion Group</a>
 如果你希望和 WeixinBot 的其他开发者交流，或者有什么问题和建议，欢迎大家加入微信群【Youth fed the dog】一起讨论。扫描下面的二维码添加机器人为好友，并回复【Aidog】获取入群链接。
 
@@ -794,6 +803,3 @@ Content:
 注：这个不是群的二维码，是机器人拉你入群，记得回复机器人【Aidog】哦~ （secret code: Aidog）
 
 ## <a name="Recent-Update">Recent Update</a>
-
-- association_login
-	目前网页版微信已经可以脱离扫码，但是依然需要在客户端进行确认登录。
