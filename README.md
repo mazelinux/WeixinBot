@@ -788,7 +788,7 @@ Content:
 这个分支的维护者是maze,如果你对这个分支感兴趣或者想讨论如何earn money，可以加机器人
 
 <div align=center>
-<img src="imgs/auto.jpg" width="220" height="550" alt="join us"/>
+<img src="imgs/auto.jpg" width="220" height="440" alt="join us"/>
 </div>
 
 - association_login
